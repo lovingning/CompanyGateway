@@ -517,7 +517,7 @@ section.spacer blockquote cite {
 
 
 
-/* === section works === */
+/* === section products === */
 
 #works h4 {
 	margin-bottom:20px;
@@ -1682,4 +1682,9 @@ i.icon-white {
 	#contact-form input[type=submit] {
 		width: 100%;
 	}
+}
+
+/*自定义style*/
+#portfolio-wrap .linear {
+	width: 100%;
 }

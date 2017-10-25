@@ -53,7 +53,7 @@
     });
     
     // kick the event to pick up any elements already in view.
-    // note however, this only works if the plugin is included after the elements are bound to 'inview'
+    // note however, this only products if the plugin is included after the elements are bound to 'inview'
     $(function () {
         $(window).scroll();
     });

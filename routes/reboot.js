@@ -12,7 +12,7 @@ router.all('/', function(req, res, next) {
     dbOperate.checkRootAccount(account,password,function (err) {
         if(err)debug.log(err);
         app.locals=null;
-        res.redirect('/views/index.html');
+        res.redirect('/views/index.ejs');
     });
 });
 

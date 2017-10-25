@@ -1,0 +1,412 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Maxim</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- css -->
+    <link href="../public/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../public/css/style.css" rel="stylesheet">
+    <!-- skin color -->
+    <link href="../public/color/default.css" rel="stylesheet">
+    <!--[if lt IE 7]>
+    <link href="../public/css/font-awesome-ie7.css" type="text/css" rel="stylesheet">
+    <![endif]-->
+    <link rel="shortcut icon" href="../public/img/favicon.ico">
+</head>
+<body>
+
+<!-- navbar头部 -->
+<div class="navbar-wrapper">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <!-- Responsive navbar -->
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                            class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </a>
+                <%# 加载导航栏数据%>
+                <h1 class="brand"><a href="index.html" tppabs="#"><%= pageConfig.company %></a></h1>
+                <!-- navigation -->
+                <nav class="pull-right nav-collapse collapse">
+                    <ul id="menu-main" class="nav">
+                        <li><a title="team" href="#about"><%= pageConfig.about %></a></li>
+                        <li><a title="services" href="#services"><%= pageConfig.services %></a></li>
+                        <li class="hidden"><a title="products" href="#products"><%= pageConfig.products %></a></li>
+                        <li><a title="joinUs" href="#joinUs"><%= pageConfig.joinUs %></a></li>
+                        <li><a title="blog" href="#blog"><%= pageConfig.blog %></a></li>
+                        <li><a title="regulations" href="#regulations"><%= pageConfig.regulations %></a></li>
+                        <li><a title="contact" href="#contact"><%= pageConfig.contact %></a></li>
+                        <li class="hidden"><a href="../public/page.html"><%= pageConfig.page %></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Header area -->
+<div id="header-wrapper" class="header-slider">
+    <header class="clearfix">
+        <div class="logo">
+            <img src="../public/img/logo-image.png" alt=""/>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <div id="main-flexslider" class="flexslider">
+                        <ul class="slides">
+                            <%# 首页欢迎内容,海报%>
+                            <% for(var position in tableInfo) { %>
+                            <li>
+                                <p class="home-slide-content">
+                                    <%= tableInfo[position].title %>
+                                </p>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </div>
+                    <!-- end slider -->
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
+
+<!-- spacer section -->
+<section class="spacer green">
+    <div class="container">
+        <div class="row">
+            <div class="span6 alignright flyLeft">
+                <blockquote class="large">
+                    <%# 座右铭%>
+                    <%= pageConfig.motto %> <cite><%= pageConfig.mottoAuthor %></cite>
+                </blockquote>
+            </div>
+            <div class="span6 aligncenter flyRight">
+                <i class="icon-coffee icon-10x"></i>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end spacer section -->
+
+<!-- section: team -->
+<%# 员工信息 %>
+<section id="about" class="section">
+    <div class="container">
+        <h4><%= pageConfig.introduce %></h4>
+        <div class="row">
+            <div class="span4 offset1">
+                <div>
+                    <h2><%= pageConfig.introduceTitle %></h2>
+                    <p><%= pageConfig.introduce.introduceContent %></p>
+                </div>
+            </div>
+            <div class="span6">
+                <div class="aligncenter">
+                    <img src="../public/img/icons/creativity.png" alt=""/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <% for(var item in tableStaff) { %>
+            <div class="span2 <%= item === 0 ? 'offset1' : '' %> flyIn">
+                <div class="people">
+                    <img class="team-thumb img-circle" src="<%= tableStaff[item]['icon'] %>" alt=""/>
+                    <h3><%= tableStaff[item]['name'] %></h3>
+                    <p>
+                        <%= getStaffDuty(tableStaff[item]['duty']) %>
+                    </p>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <!-- /.container -->
+</section>
+<!-- end section: team -->
+
+<%# 服务信息 %>
+<!-- section: services -->
+<section id="services" class="section orange">
+    <div class="container">
+        <h4><%= pageConfig.services %></h4>
+        <!-- Four columns -->
+        <div class="row">
+            <% for(var item in tableService) { %>
+            <div class="span3 animated flyIn">
+                <div class="service-box">
+                    <img src="<%= tableService[item]['icon'] %>" alt=""/>
+                    <h2><%= tableService[item]['name'] %></h2>
+                    <p>
+                        <%= tableService[item]['introduce'] %>
+                    </p>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+<!-- end section: services -->
+
+<%# 招聘信息 %>
+<section id="join" class="section">
+    <div class="container clearfix">
+        <h4><%= pageConfig.joinUs %></h4>
+        <!-- portfolio filter -->
+        <div class="row">
+            <div id="filters" class="span12">
+                <ul class="clearfix">
+                    <li><a href="#" data-filter="*" class="active">
+                            <h5><%= '全部' %></h5>
+                        </a></li>
+                    <%# 加载所有的职位类别 %>
+                    <% for(var item in tableJoin) { %>
+                    <li><a href="#" data-filter=".filter%<%= tableJoin[item]['id'] %>">
+                            <h5><%= getJOINType(tableJoin[item]['id']) %></h5>
+                        </a></li>
+                    <% } %>
+                </ul>
+            </div>
+            <!-- END PORTFOLIO FILTERING -->
+        </div>
+
+        <%# 显示具体的职位详情 %>
+        <div id="portfolio-wrap">
+            <!-- portfolio item -->
+            <% for(var item in tableJoin) { %>
+            <div class="row">
+                <div class="span12">
+                    <div class="portfolio-item linear ">
+                        <div class="portfolio">
+                            <div class="portfolio-image">
+                                <img src="../public/img/products/<%= Math.floor(Math.random() * 10 + 1) %>.png" alt=""/>
+                                <div class="portfolio-overlay">
+                                    <div class="thumb-info">
+                                        <h5><%= '岗位' %></h5>
+                                        <p>
+                                            <%= getJOINType(tableJoin[item]['id']) %>
+                                        </p>
+                                        <h5><%= '待遇' %></h5>
+                                        <p>
+                                            <%= getJOINType(tableJoin[item]['treatment']) %>
+                                        </p>
+                                        <h5><%= '福利' %></h5>
+                                        <p>
+                                            <%= getJOINType(tableJoin[item]['welfare']) %>
+                                        </p>
+                                        <h5><%= '要求' %></h5>
+                                        <p>
+                                            <%= getJOINType(tableJoin[item]['demand']) %>
+                                        </p>
+                                        <h5><%= '职责' %></h5>
+                                        <p>
+                                            <%= getJOINType(tableJoin[item]['responsibility']) %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<%# 信念 %>
+<!-- spacer section -->
+<section class="spacer bg3">
+    <div class="container">
+        <div class="row">
+            <div class="span12 aligncenter flyLeft">
+                <blockquote class="large">
+                    <%= pageConfig.productsBelief %>
+                </blockquote>
+            </div>
+            <div class="span12 aligncenter flyRight">
+                <i class="icon-rocket icon-10x"></i>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end spacer section -->
+
+<%# 博客模块 %>
+<!-- section: blog -->
+<section id="blog" class="section">
+    <div class="container">
+        <h4><%= pageConfig.blog %></h4>
+        <!-- Three columns -->
+        <div class="row">
+            <% for(var item in tableBlog) {
+                var time = new Date(tableBlog[item]['time']);
+            %>
+            <div class="span3">
+                <div class="home-post">
+                    <div class="post-image">
+                        <img class="max-img" src="<%= tableBlog[item]['icon'] %>" alt=""/>
+                    </div>
+                    <div class="post-meta">
+                        <i class="icon-file icon-2x"></i>
+                        <span class="date"><%= time.getMonth() + " " + time.getDay() + "," + time.getYear() %></span>
+                        <span class="tags"><a href="#"><%= tableBlog[item]['pen_name'] %></a></span>
+                    </div>
+                    <div class="entry-content">
+                        <h5><strong><a href="#"><%= tableBlog[item]['title'] %></a></strong></h5>
+                        <p>
+                            <%= tableBlog[item]['brief'] %>. &hellip;
+                        </p>
+                        <a href="<%= tableBlog[item]['address'] || '#' %>" class="more"><%= '阅读原文' %></a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <div class="blankdivider30"></div>
+        <div class="aligncenter">
+            <a href="#" class="btn btn-large btn-theme"><%= pageConfig.moreBlog %></a>
+        </div>
+    </div>
+</section>
+
+<%# 规章制度 %>
+<!-- spacer section -->
+<section id="regulations" class="section spacer bg2">
+    <div class="container">
+        <h4><%= pageConfig.regulations %></h4>
+        <div class="row">
+            <div class="span12">
+                <% for (var item in tableRegulations) { %>
+                <p style="text-align: left">
+                    <%= item + '、' + tableRegulations[item]['content'] %>
+                </p>
+                <br>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end spacer section -->
+
+<%# 联系我们 %>
+<!-- section: contact -->
+<section id="contact" class="section green">
+    <div class="container">
+        <h4>Get in Touch</h4>
+        <div class="blankdivider30"></div>
+        <div class="row ">
+            <div class="span4">
+                <div class="col-md-4 centered"><i class="fa fa-map-marker fa-2x "></i>
+                    <p><%- pageConfig.address %></p>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="col-md-4 centered"><i class="fa fa-envelope-o fa-2x"></i>
+                    <p><%- pageConfig.email %></p>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="col-md-4 centered"><i class="fa fa-phone fa-2x"></i>
+                    <p><%- pageConfig.phone %></p>
+                </div>
+            </div>
+        </div>
+        <p>
+            <%= pageConfig.getContact%>
+        </p>
+        <div class="blankdivider30">
+        </div>
+        <div class="row">
+            <div class="span12">
+                <div class="cform" id="contact-form">
+                    <div id="sendmessage">
+                        Your message has been sent. Thank you!
+                    </div>
+                    <form action="contact/contact.php" method="post" class="contactForm">
+                        <div class="row">
+                            <div class="span6">
+                                <div class="field your-name">
+                                    <input type="text" name="name" placeholder="Your Name" class="cform-text"
+                                           size="40" data-rule="maxlen:4" data-msg="Please enter at least 4 chars"/>
+                                    <div class="validation">
+                                    </div>
+                                </div>
+                                <div class="field your-email">
+                                    <input type="text" name="email" placeholder="Your Email" class="cform-text"
+                                           size="40" data-rule="email" data-msg="Please enter a valid email"/>
+                                    <div class="validation">
+                                    </div>
+                                </div>
+                                <div class="field subject">
+                                    <input type="text" name="subject" placeholder="Subject" class="cform-text" size="40"
+                                           data-rule="maxlen:4" data-msg="Please enter at least 8 chars of subject"/>
+                                    <div class="validation">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6">
+                                <div class="field message">
+                                    <textarea placeholder="content" name="message" class="cform-textarea" cols="40" rows="10"
+                                              data-rule="required" data-msg="Please write something for us"></textarea>
+                                    <div class="validation">
+                                    </div>
+                                </div>
+                                <input type="submit" value="Send message" class="btn btn-theme pull-left">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- ./span12 -->
+        </div>
+    </div>
+</section>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="span6 offset3">
+                <ul class="social-networks">
+                    <li><a href="#"><i class="icon-circled icon-bgdark icon-instagram icon-2x"></i></a></li>
+                    <li><a href="#"><i class="icon-circled icon-bgdark icon-twitter icon-2x"></i></a></li>
+                    <li><a href="#"><i class="icon-circled icon-bgdark icon-dribbble icon-2x"></i></a></li>
+                    <li><a href="#"><i class="icon-circled icon-bgdark icon-pinterest icon-2x"></i></a></li>
+                </ul>
+                <p class="copyright">Copyleft &copy; 2017 Company name All rights reserved</p>
+            </div>
+        </div>
+    </div>
+    <!-- ./container -->
+</footer>
+<a href="#" class="scrollup"><i class="icon-angle-up icon-square icon-bgdark icon-2x"></i></a>
+<!-- jQuery -->
+<script src="../public/js/jquery.js"></script>
+<!-- nav -->
+<script src="../public/js/jquery.scrollTo.js"></script>
+<script src="../public/js/jquery.nav.js"></script>
+<!-- localScroll -->
+<script src="../public/js/jquery.localscroll-1.2.7-min.js"></script>
+<!-- bootstrap -->
+<script src="../public/js/bootstrap.js"></script>
+<!-- prettyPhoto -->
+<script src="../public/js/jquery.prettyPhoto.js"></script>
+<!-- products scripts -->
+<script src="../public/js/isotope.js"></script>
+<!-- flexslider -->
+<script src="../public/js/jquery.flexslider.js"></script>
+<!-- inview -->
+<script src="../public/js/inview.js"></script>
+<!-- animation -->
+<script src="../public/js/animate.js"></script>
+<!-- twitter -->
+<script src="../public/js/jquery.tweet.js"></script>
+<!-- contact form -->
+<script src="../public/js/validate.js"></script>
+<!-- custom functions -->
+<script src="../public/js/custom.js"></script>
+</body>
+</html>
