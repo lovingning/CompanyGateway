@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Maxim</title>
+    <title><%= pageConfig.company%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -28,7 +28,7 @@
                             class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                 </a>
                 <%# 加载导航栏数据%>
-                <h1 class="brand"><a href="index.html" tppabs="#"><%= pageConfig.company %></a></h1>
+                <h1 class="brand"><a href="#" tppabs="#"><%= pageConfig.company %></a></h1>
                 <!-- navigation -->
                 <nav class="pull-right nav-collapse collapse">
                     <ul id="menu-main" class="nav">
@@ -75,13 +75,13 @@
     </header>
 </div>
 
+<%# 座右铭%>
 <!-- spacer section -->
 <section class="spacer green">
     <div class="container">
         <div class="row">
             <div class="span6 alignright flyLeft">
                 <blockquote class="large">
-                    <%# 座右铭%>
                     <%= pageConfig.motto %> <cite><%= pageConfig.mottoAuthor %></cite>
                 </blockquote>
             </div>
@@ -278,7 +278,7 @@
 <!-- spacer section -->
 <section id="regulations" class="section spacer bg2">
     <div class="container">
-        <h4><%= pageConfig.regulations %></h4>
+        <h4 style="color: white"><%= pageConfig.regulations %></h4>
         <div class="row">
             <div class="span12">
                 <% for (var item in tableRegulations) { %>
@@ -327,7 +327,7 @@
                     <div id="sendmessage">
                         Your message has been sent. Thank you!
                     </div>
-                    <form action="contact/contact.php" method="post" class="contactForm">
+                    <form action="/postSubject" method="post" class="contactForm">
                         <div class="row">
                             <div class="span6">
                                 <div class="field your-name">
@@ -366,6 +366,8 @@
         </div>
     </div>
 </section>
+
+<%# 底部导航 %>
 <footer>
     <div class="container">
         <div class="row">
@@ -383,6 +385,7 @@
     <!-- ./container -->
 </footer>
 <a href="#" class="scrollup"><i class="icon-angle-up icon-square icon-bgdark icon-2x"></i></a>
+
 <!-- jQuery -->
 <script src="../public/js/jquery.js"></script>
 <!-- nav -->

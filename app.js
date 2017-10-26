@@ -5,8 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var debug = require('debug');
-var singleInstance = require('./src/database').initDB();
+var dbInstance = require('./src/database').initDB();
 var ejs = require('ejs');
+var fs=require('fs');
 
 var welcome = require('./routes/welcome');
 var users = require('./routes/users');
@@ -38,12 +39,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  * 设定界面元素显示信息
  */
-app.locals.pageConfig = singleInstance.pageConfig;
+app.locals.pageConfig = dbInstance.pageConfig;
 
 /**
  * 设定最新消息信息
  */
-singleInstance.queryTableInfo(5, 'time', -1, function (err, data) {
+dbInstance.queryTableInfo(5, 'time', -1, function (err, data) {
     app.locals.tableInfo = data;
     debug.log(data);
 
@@ -55,7 +56,7 @@ singleInstance.queryTableInfo(5, 'time', -1, function (err, data) {
 /**
  * 获取最新的user信息,根据公司职位级别来显示部分内容
  */
-singleInstance.queryTableStaff(5, 'duty', -1, function (err, data) {
+dbInstance.queryTableStaff(5, 'duty', -1, function (err, data) {
     app.locals.tableStaff = data;
     debug.log(data);
 });
@@ -63,7 +64,7 @@ singleInstance.queryTableStaff(5, 'duty', -1, function (err, data) {
 /**
  * 获取最新的服务消息
  */
-singleInstance.queryTableService(4, 'weight', -1, function (err, data) {
+dbInstance.queryTableService(4, 'weight', -1, function (err, data) {
     app.locals.tableService = data;
     debug.log(data);
 });
@@ -71,7 +72,7 @@ singleInstance.queryTableService(4, 'weight', -1, function (err, data) {
 /**
  * 获取最新产品信息
  */
-singleInstance.queryTableProduct(5, 'weight', -1, function (err, data) {
+dbInstance.queryTableProduct(5, 'weight', -1, function (err, data) {
     app.locals.tableProduct = data;
     debug.log(data);
 });
@@ -79,7 +80,7 @@ singleInstance.queryTableProduct(5, 'weight', -1, function (err, data) {
 /**
  * 博客消息
  */
-singleInstance.queryTableBlog(5, 'weight', -1, function (err, data) {
+dbInstance.queryTableBlog(5, 'weight', -1, function (err, data) {
     app.locals.tableBlog = data;
     debug.log(data);
 });
@@ -87,15 +88,15 @@ singleInstance.queryTableBlog(5, 'weight', -1, function (err, data) {
 /**
  * 招聘消息
  */
-singleInstance.queryTableJoin(function (err, data) {
+dbInstance.queryTableJoin(function (err, data) {
   app.locals.tableJoin = data;
   debug.log(data);
 });
 
 /**
- * 招聘消息
+ * 制度消息
  */
-singleInstance.queryTableRegulations(function (err, data) {
+dbInstance.queryTableRegulations(function (err, data) {
   app.locals.tableRegulations = data;
   debug.log(data);
 });
@@ -103,8 +104,8 @@ singleInstance.queryTableRegulations(function (err, data) {
 /**
  * 内部方法,提供数据格式转换
  */
-app.locals.getStaffDuty=singleInstance.getStaffDuty;
-app.locals.getJOINType=singleInstance.getJOINType;
+app.locals.getStaffDuty=dbInstance.getStaffDuty;
+app.locals.getJOINType=dbInstance.getJOINType;
 /////////////////////////////////////////////////////
 
 //拦截器,再次拦截
@@ -114,17 +115,40 @@ app.use('/users', users);
 app.use('/reboot', reboot);
 
 //提出建议内容
-app.use(singleInstance.pageConfig.submitUrl,function (req,res,next) {
+app.use(dbInstance.pageConfig.submitUrl,function (req,res,next) {
   var name=req.header('name');
   var email=req.header('email');
   var subject=req.header('subject');
   var content=req.header('content');
   var time=new Date().getTime();
+  dbInstance.insertTableSuggestions({
+    
+  },function (err) {
+    if(!err){
+      console.log(this);
+      console.log(this.lastID);
+      res.end('提交成功');
+    }
+    res.end('提交失败');
+  });
+});
 
+//如果是html中访问css,js等文件,则修改路径的规则
+app.use('/public',function (req, res, next) {
+  console.log(req.url);
+  fs.readFile(path.join(__dirname,req.baseUrl,req.url), function (err, data) {
+    if (err) {
+      res.end();
+    }
+    res.end(data);
+  });
 });
 
 //加载首页信息
-app.use('/*', welcome);
+app.use('/index',welcome);
+app.use('/*', function (req, res, next) {
+  res.redirect('/index');
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

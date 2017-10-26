@@ -1,6 +1,7 @@
 //file:test.js
 var sqlite3 = require('sqlite3');
 var debug = require('debug');
+var globalConfig=require('../config');
 
 //新建并创建表
 var db;
@@ -13,11 +14,11 @@ singleInstance.pageConfig = {
   about: '关于',
   services: '服务',
   products: '产品',
-  joinUs:'人才招聘',
+  joinUs: '人才招聘',
   blog: '博客',
   contact: '联系我们',
   page: '界面元素',
-  regulations:'制度',
+  regulations: '制度',
   motto: '想法与实现之间,尚有很大的差距',
   mottoAuthor: 'Mark Simmons,Nett Media',
   introduce: '这是我们',
@@ -29,7 +30,7 @@ singleInstance.pageConfig = {
   email: '***@***.com',
   phone: '180 **** ****',
   getContact: '如果对本公司有****,......,请与我们取得联系',
-  submitUrl:'/postSubject'
+  submitUrl: '/postSubject'
 };
 
 
@@ -59,11 +60,12 @@ singleInstance.checkRootAccount = function (account, password, callback) {
 singleInstance.queryTableInfo = function (limit, orderBy, orderType, callback) {
   var order = '';
   if (orderType) {
-    order = " order by " + orderBy + " {" + (orderType > 0 ? "ASC" : "DESC") + "} ";
+    order = " order by " + orderBy + " " + (orderType > 0 ? "ASC" : "DESC") + " ";
   }
 
   limit = limit < 0 ? "" : " limit " + limit + " ";
-  db.all("select * from " + TABLE_INFO + order + limit, callback);
+  var sql="select * from " + TABLE_INFO + order + limit;
+  db.all(sql, callback);
 };
 
 /**
@@ -77,7 +79,7 @@ singleInstance.queryTableInfo = function (limit, orderBy, orderType, callback) {
 singleInstance.queryTableStaff = function (limit, orderBy, orderType, callback) {
   var order = '';
   if (orderType) {
-    order = " order by " + orderBy + " {" + (orderType > 0 ? "ASC" : "DESC") + "} ";
+    order = " order by " + orderBy + " " + (orderType > 0 ? "ASC" : "DESC") + " ";
   }
 
   limit = limit < 0 ? "" : " limit " + limit + " ";
@@ -95,7 +97,7 @@ singleInstance.queryTableStaff = function (limit, orderBy, orderType, callback) 
 singleInstance.queryTableService = function (limit, orderBy, orderType, callback) {
   var order = '';
   if (orderType) {
-    order = " order by " + orderBy + " {" + (orderType > 0 ? "ASC" : "DESC") + "} ";
+    order = " order by " + orderBy + " " + (orderType > 0 ? "ASC" : "DESC") + " ";
   }
 
   limit = limit < 0 ? "" : " limit " + limit + " ";
@@ -113,7 +115,7 @@ singleInstance.queryTableService = function (limit, orderBy, orderType, callback
 singleInstance.queryTableProduct = function (limit, orderBy, orderType, callback) {
   var order = '';
   if (orderType) {
-    order = " order by " + orderBy + " {" + (orderType > 0 ? "ASC" : "DESC") + "} ";
+    order = " order by " + orderBy + " " + (orderType > 0 ? "ASC" : "DESC") + " ";
   }
 
   limit = limit < 0 ? "" : " limit " + limit + " ";
@@ -131,7 +133,7 @@ singleInstance.queryTableProduct = function (limit, orderBy, orderType, callback
 singleInstance.queryTableBlog = function (limit, orderBy, orderType, callback) {
   var order = '';
   if (orderType) {
-    order = " order by " + orderBy + " {" + (orderType > 0 ? "ASC" : "DESC") + "} ";
+    order = " order by " + orderBy + " " + (orderType > 0 ? "ASC" : "DESC") + " ";
   }
 
   limit = limit < 0 ? "" : " limit " + limit + " ";
@@ -149,7 +151,7 @@ singleInstance.queryTableBlog = function (limit, orderBy, orderType, callback) {
 singleInstance.queryTableMember = function (limit, orderBy, orderType, callback) {
   var order = '';
   if (orderType) {
-    order = " order by " + orderBy + " {" + (orderType > 0 ? "ASC" : "DESC") + "} ";
+    order = " order by " + orderBy + " " + (orderType > 0 ? "ASC" : "DESC") + " ";
   }
 
   limit = limit < 0 ? "" : " limit " + limit + " ";
@@ -162,7 +164,7 @@ singleInstance.queryTableMember = function (limit, orderBy, orderType, callback)
  * @param callback 回调,err,rows[多个数据为数组形式]
  */
 singleInstance.queryTableJoin = function (callback) {
-  db.all("select * from " + TABLE_JOIN +" where true",callback);
+  db.all("select * from " + TABLE_JOIN , callback);
 };
 
 /**
@@ -171,7 +173,7 @@ singleInstance.queryTableJoin = function (callback) {
  * @param callback 回调,err,rows[多个数据为数组形式]
  */
 singleInstance.queryTableRegulations = function (callback) {
-  db.all("select * from " + TABLE_REGULATIONS +" where true",callback);
+  db.all("select * from " + TABLE_REGULATIONS, callback);
 };
 
 /**
@@ -180,7 +182,7 @@ singleInstance.queryTableRegulations = function (callback) {
  * @param callback 回调,err,rows[多个数据为数组形式]
  */
 singleInstance.queryTableRegulations = function (callback) {
-  db.all("select * from " + TABLE_REGULATIONS +" where true",callback);
+  db.all("select * from " + TABLE_REGULATIONS , callback);
 };
 
 /**
@@ -189,22 +191,32 @@ singleInstance.queryTableRegulations = function (callback) {
  * @param callback 回调,err,rows[多个数据为数组形式]
  * @param obj js对象,键和值对应数据库中字段
  */
-singleInstance.insertTableSuggestions = function (obj,callback) {
-  var keys='';
-  var values='';
+singleInstance.insertTableSuggestions = function (obj, callback) {
+  var keys = '';
+  var values = '';
   for (var key in obj) {
+    keys += "," + key;
+    values += ",'" + obj[key] + "'";
   }
-  db.run("insert into "+TABLE_SUGGESTIONS+"(id) values(12)");
+  if (Object.keys(obj)) {
+    keys = keys.substring(1);
+    values = values.substring(1);
+  }
+  var sql = "insert into " + TABLE_SUGGESTIONS + "(" + keys + ") values(" + values + ");";
+  db.run(sql, callback);
 };
 
 /**
  * 获取职位对应的字符串形式
  */
-singleInstance.getJOINType=function (id) {
-  switch (id){
-    case 0:return '总经理';
-    case 1:return '软件开发人员';
-    case 2:return '硬件开发';
+singleInstance.getJOINType = function (id) {
+  switch (id) {
+    case 0:
+      return '总经理';
+    case 1:
+      return '软件开发人员';
+    case 2:
+      return '硬件开发';
   }
   return '普工';
 };
@@ -212,18 +224,23 @@ singleInstance.getJOINType=function (id) {
 /**
  * 获取职工类型
  */
-singleInstance.getStaffDuty=function (duty) {
-  switch (duty){
-    case 0:return '职员';
-    case 100:return '项目组长';
-    case 200:return '总监';
-    case 300:return '经理';
-    case 400:return '总经理';
-    case 500:return '董事长';
+singleInstance.getStaffDuty = function (duty) {
+  switch (duty) {
+    case 0:
+      return '职员';
+    case 100:
+      return '项目组长';
+    case 200:
+      return '总监';
+    case 300:
+      return '经理';
+    case 400:
+      return '总经理';
+    case 500:
+      return '董事长';
   }
   return '临时工';
 };
-
 
 
 //数据库表
@@ -233,12 +250,12 @@ var TABLE_SERVICE = 'table_service';
 var TABLE_PRODUCT = 'table_product';
 var TABLE_BLOG = 'table_blog';
 var TABLE_MEMBER = 'table_member';
-var TABLE_JOIN='table_join';
-var TABLE_REGULATIONS='table_regulations';
-var TABLE_SUGGESTIONS='table_suggestions';
+var TABLE_JOIN = 'table_join';
+var TABLE_REGULATIONS = 'table_regulations';
+var TABLE_SUGGESTIONS = 'table_suggestions';
 
 var defaultConfig = {
-  dbName: './database/company.db',
+  dbName: '../database/'+globalConfig.dbName,
   tables: [
     //首页信息滚动:编号,标题,内容
     {
@@ -271,36 +288,36 @@ var defaultConfig = {
     //公司内部人员博客:博客编号,图片,员工id,笔名,标题,简介,博客地址
     {
       name: TABLE_BLOG,
-      columns: ['id', 'icon', 'staff_id','pen_name' ,'title', 'brief', 'address', 'weight','time'],
-      types: ['integer', 'text', 'integer','text' , 'text', 'text', 'text', 'integer','integer']
+      columns: ['id', 'icon', 'staff_id', 'pen_name', 'title', 'brief', 'address', 'weight', 'time'],
+      types: ['integer', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer, FOREIGN KEY (staff_id) REFERENCES '+TABLE_STAFF+'(id)']
     },
 
     //用户账户:编号,账户,密码,昵称,手机号,头像
     {
       name: TABLE_MEMBER,
-      columns: ['type','account', 'password', 'nick', 'phone', 'icon'],
+      columns: ['id', 'account', 'password', 'nick', 'phone', 'icon'],
       types: ['integer', 'text', 'text', 'text', 'text', 'text']
     },
 
     //用户账户:职位,数量,要求条件,待遇(工资),福利(补助等),联系人,职责
     {
       name: TABLE_JOIN,
-      columns: ['id','number', 'demand', 'treatment', 'welfare', 'contact','responsibility'],
-      types: ['integer', 'integer', 'text', 'text', 'text', 'text','text']
+      columns: ['id', 'number', 'demand', 'treatment', 'welfare', 'contact', 'responsibility'],
+      types: ['integer', 'integer', 'text', 'text', 'text', 'text', 'text']
     },
 
     //制度:制度编号,发布日期,状态标志(当前是否启用),终止日期,内容
     {
       name: TABLE_REGULATIONS,
-      columns: ['id','publish_time', 'status', 'abandon_time','content'],
-      types: ['integer', 'integer', 'integer', 'integer','text']
+      columns: ['id', 'publish_time', 'status', 'abandon_time', 'content'],
+      types: ['integer', 'integer', 'integer', 'integer', 'text']
     },
 
     //建议记录:id,提出人姓名,邮箱,主题(标题),内容(建议内容),提出时间(毫秒级别),
     {
-      name: TABLE_REGULATIONS,
-      columns: ['id','name', 'email', 'subject','content','time'],
-      types: ['integer primary key autoincrement', 'text', 'text', 'text','text','integer']
+      name: TABLE_SUGGESTIONS,
+      columns: ['id', 'name', 'email', 'subject', 'content', 'time'],
+      types: ['integer primary key autoincrement', 'text', 'text', 'text', 'text', 'integer']
     }
   ]
 };
@@ -334,7 +351,6 @@ exports.initDB = function (config) {
   }
   return singleInstance;
 };
-
 
 
 

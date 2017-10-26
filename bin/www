@@ -7,14 +7,15 @@
 var app = require('../app');
 var debug = require('debug')('node-projects:server');
 var http = require('http');
+var globalConfig=require('../config');
 
 /**
  * Get port from environment and store in Express.
  */
-var host='127.0.0.1';
-var port = normalizePort(process.env.PORT || '3000');
+var host=globalConfig.host;
+var port = normalizePort(process.env.PORT || globalConfig.port);
 app.set('port', port);
-console.log(app.set('host'));
+app.set('host',host);
 
 /**
  * Create HTTP server.
