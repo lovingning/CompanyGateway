@@ -1789,6 +1789,21 @@ i.icon-white {
     width: 100%;
 }
 
+.card {
+    padding: 50px 50px 50px;
+    width: 100%;
+    color: white;
+}
+
+.card h5 {
+    color: white;
+    font-weight: 900;
+}
+
+.card p {
+    padding-left: 50px;
+}
+
 /*
 div.spacer {
     padding: 90px 0 70px;

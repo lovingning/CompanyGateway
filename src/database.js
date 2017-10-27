@@ -24,7 +24,7 @@ singleInstance.pageConfig = {
   introduce: '这是我们',
   introduceTitle: '激情,昂扬,拼搏,进取',
   introduceContent: '这是一个集体,这是我的家,这里有技术大牛,有商务精英,有销售专家,更有尊敬的领导...',
-  productsBelief: '我们是一个信誉良好、信誉良好、信誉良好的网络公司',
+  productsBelief: '我们是一个信誉良好的网络公司',
   moreBlog: '查看更多博客',
   address: '**街道,**区<br>郑州,河南',
   email: '***@***.com',
@@ -217,6 +217,10 @@ singleInstance.getJOINType = function (id) {
       return '软件开发人员';
     case 2:
       return '硬件开发';
+    case 3:
+      return '前端开发';
+    case 4:
+      return '安卓开发';
   }
   return '普工';
 };
@@ -268,49 +272,49 @@ var defaultConfig = {
     {
       name: TABLE_STAFF,
       columns: ['id', 'duty', 'name', 'icon', 'sex', 'workYears', 'phone', 'email'],
-      types: ['integer', 'integer', 'text(10)', 'text', 'text', 'integer', 'text', 'text']
+      types: ['integer primary key autoincrement', 'integer', 'text(10)', 'text', 'text', 'integer', 'text', 'text']
     },
 
     //公司可对外提供的服务
     {
       name: TABLE_SERVICE,
       columns: ['id', 'icon', 'name', 'introduce', 'weight'],
-      types: ['integer', 'text', 'text', 'text', 'integer']
+      types: ['integer primary key autoincrement', 'text', 'text', 'text', 'integer']
     },
 
     //公司生产的产品
     {
       name: TABLE_PRODUCT,
       columns: ['id', 'icon', 'name', 'introduce', 'weight'],
-      types: ['integer', 'text', 'text', 'text', 'integer']
+      types: ['integer primary key autoincrement', 'text', 'text', 'text', 'integer']
     },
 
     //公司内部人员博客:博客编号,图片,员工id,笔名,标题,简介,博客地址
     {
       name: TABLE_BLOG,
       columns: ['id', 'icon', 'staff_id', 'pen_name', 'title', 'brief', 'address', 'weight', 'time'],
-      types: ['integer', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer, FOREIGN KEY (staff_id) REFERENCES '+TABLE_STAFF+'(id)']
+      types: ['integer primary key autoincrement', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer, FOREIGN KEY (staff_id) REFERENCES '+TABLE_STAFF+'(id)']
     },
 
     //用户账户:编号,账户,密码,昵称,手机号,头像
     {
       name: TABLE_MEMBER,
       columns: ['id', 'account', 'password', 'nick', 'phone', 'icon'],
-      types: ['integer', 'text', 'text', 'text', 'text', 'text']
+      types: ['integer primary key autoincrement', 'text', 'text', 'text', 'text', 'text']
     },
 
     //用户账户:职位,数量,要求条件,待遇(工资),福利(补助等),联系人,职责
     {
       name: TABLE_JOIN,
       columns: ['id', 'number', 'demand', 'treatment', 'welfare', 'contact', 'responsibility'],
-      types: ['integer', 'integer', 'text', 'text', 'text', 'text', 'text']
+      types: ['integer primary key autoincrement', 'integer', 'text', 'text', 'text', 'text', 'text']
     },
 
     //制度:制度编号,发布日期,状态标志(当前是否启用),终止日期,内容
     {
       name: TABLE_REGULATIONS,
       columns: ['id', 'publish_time', 'status', 'abandon_time', 'content'],
-      types: ['integer', 'integer', 'integer', 'integer', 'text']
+      types: ['integer primary key autoincrement', 'integer', 'integer', 'integer', 'text']
     },
 
     //建议记录:id,提出人姓名,邮箱,主题(标题),内容(建议内容),提出时间(毫秒级别),

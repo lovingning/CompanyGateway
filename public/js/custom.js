@@ -146,6 +146,7 @@ jQuery(document).ready(function($) {
 		auto_join_text_url: ' we were checking out ',
 		loading_text: 'Loading tweets...'
 	});
+
 });
 	
 	

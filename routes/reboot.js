@@ -4,14 +4,14 @@ var app=require('../app');
 var dbOperate=require('../src/database').initDB();
 
 /* GET users listing. */
-router.all('/', function(req, res, next) {
-    var account=req.header('account');
-    var password=req.header('password');
+router.get('/', function(req, res, next) {
+    var account=req.query['account'];
+    var password=req.query['password'];
 
     //验证用户名称密码
     dbOperate.checkRootAccount(account,password,function (err) {
         if(err)debug.log(err);
-        app.locals=null;
+        app.initAppLocals();
         res.redirect('/views/index.ejs');
     });
 });

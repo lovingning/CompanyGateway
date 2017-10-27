@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><%= pageConfig.company%></title>
+    <title><%= pageConfig.company %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -15,6 +15,7 @@
     <link href="../public/css/font-awesome-ie7.css" type="text/css" rel="stylesheet">
     <![endif]-->
     <link rel="shortcut icon" href="../public/img/favicon.ico">
+
 </head>
 <body>
 
@@ -28,13 +29,13 @@
                             class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                 </a>
                 <%# 加载导航栏数据%>
-                <h1 class="brand"><a href="#" tppabs="#"><%= pageConfig.company %></a></h1>
+                <h1 class="brand"><a tppabs="#" disabled="true"><%= pageConfig.company %></a></h1>
                 <!-- navigation -->
                 <nav class="pull-right nav-collapse collapse">
                     <ul id="menu-main" class="nav">
                         <li><a title="team" href="#about"><%= pageConfig.about %></a></li>
                         <li><a title="services" href="#services"><%= pageConfig.services %></a></li>
-                        <li class="hidden"><a title="products" href="#products"><%= pageConfig.products %></a></li>
+                        <!--<li class="hidden"><a title="products" href="#products"><%= pageConfig.products %></a></li>-->
                         <li><a title="joinUs" href="#joinUs"><%= pageConfig.joinUs %></a></li>
                         <li><a title="blog" href="#blog"><%= pageConfig.blog %></a></li>
                         <li><a title="regulations" href="#regulations"><%= pageConfig.regulations %></a></li>
@@ -102,7 +103,7 @@
             <div class="span4 offset1">
                 <div>
                     <h2><%= pageConfig.introduceTitle %></h2>
-                    <p><%= pageConfig.introduce.introduceContent %></p>
+                    <p><%= pageConfig.introduceContent %></p>
                 </div>
             </div>
             <div class="span6">
@@ -113,7 +114,7 @@
         </div>
         <div class="row">
             <% for(var item in tableStaff) { %>
-            <div class="span2 <%= item === 0 ? 'offset1' : '' %> flyIn">
+            <div class="span2 <%= item == 0 ? 'offset1' : '' %> flyIn">
                 <div class="people">
                     <img class="team-thumb img-circle" src="<%= tableStaff[item]['icon'] %>" alt=""/>
                     <h3><%= tableStaff[item]['name'] %></h3>
@@ -153,7 +154,7 @@
 <!-- end section: services -->
 
 <%# 招聘信息 %>
-<section id="join" class="section">
+<section id="joinUs" class="section">
     <div class="container clearfix">
         <h4><%= pageConfig.joinUs %></h4>
         <!-- portfolio filter -->
@@ -165,7 +166,7 @@
                         </a></li>
                     <%# 加载所有的职位类别 %>
                     <% for(var item in tableJoin) { %>
-                    <li><a href="#" data-filter=".filter%<%= tableJoin[item]['id'] %>">
+                    <li><a href="#" data-filter=".filter<%= tableJoin[item]['id'] %>">
                             <h5><%= getJOINType(tableJoin[item]['id']) %></h5>
                         </a></li>
                     <% } %>
@@ -175,45 +176,41 @@
         </div>
 
         <%# 显示具体的职位详情 %>
-        <div id="portfolio-wrap">
-            <!-- portfolio item -->
-            <% for(var item in tableJoin) { %>
-            <div class="row">
-                <div class="span12">
-                    <div class="portfolio-item linear ">
-                        <div class="portfolio">
-                            <div class="portfolio-image">
-                                <img src="../public/img/products/<%= Math.floor(Math.random() * 10 + 1) %>.png" alt=""/>
-                                <div class="portfolio-overlay">
-                                    <div class="thumb-info">
-                                        <h5><%= '岗位' %></h5>
-                                        <p>
-                                            <%= getJOINType(tableJoin[item]['id']) %>
-                                        </p>
-                                        <h5><%= '待遇' %></h5>
-                                        <p>
-                                            <%= getJOINType(tableJoin[item]['treatment']) %>
-                                        </p>
-                                        <h5><%= '福利' %></h5>
-                                        <p>
-                                            <%= getJOINType(tableJoin[item]['welfare']) %>
-                                        </p>
-                                        <h5><%= '要求' %></h5>
-                                        <p>
-                                            <%= getJOINType(tableJoin[item]['demand']) %>
-                                        </p>
-                                        <h5><%= '职责' %></h5>
-                                        <p>
-                                            <%= getJOINType(tableJoin[item]['responsibility']) %>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="row">
+            <div class="span12">
+                <div id="portfolio-wrap">
+                    <!-- portfolio item -->
+                    <% for(var item in tableJoin) { %>
+                    <div class="portfolio-item grid filter<%= tableJoin[item]['id'] %>" style="width: 100%; margin-bottom: 5%;margin-left: 5%;
+    margin-right: 5%;">
+                        <div class="card"
+                             style='background: url("../public/img/bg/bg-<%= 3 %>.jpg") no-repeat'>
+                            <h5><%= '岗位' %></h5>
+                            <p>
+                                <%= getJOINType(tableJoin[item]['id']) %>
+                            </p>
+                            <h5><%= '待遇' %></h5>
+                            <p>
+                                <%= tableJoin[item]['treatment'] %>
+                            </p>
+                            <h5><%= '福利' %></h5>
+                            <p>
+                                <%= tableJoin[item]['welfare'] %>
+                            </p>
+                            <h5><%= '要求' %></h5>
+                            <p>
+                                <%= tableJoin[item]['demand'] %>
+                            </p>
+                            <h5><%= '职责' %></h5>
+                            <p>
+                                <%= tableJoin[item]['responsibility'] %>
+                            </p>
                         </div>
+                        <br>
                     </div>
+                    <% } %>
                 </div>
             </div>
-            <% } %>
         </div>
     </div>
 </section>
@@ -279,11 +276,12 @@
 <section id="regulations" class="section spacer bg2">
     <div class="container">
         <h4 style="color: white"><%= pageConfig.regulations %></h4>
+        <div class="blankdivider30"></div>
         <div class="row">
             <div class="span12">
                 <% for (var item in tableRegulations) { %>
                 <p style="text-align: left">
-                    <%= item + '、' + tableRegulations[item]['content'] %>
+                    <%= (Number(item) + 1) + '、' + tableRegulations[item]['content'] %>
                 </p>
                 <br>
                 <% } %>
@@ -317,7 +315,7 @@
             </div>
         </div>
         <p>
-            <%= pageConfig.getContact%>
+            <%= pageConfig.getContact %>
         </p>
         <div class="blankdivider30">
         </div>
@@ -325,25 +323,25 @@
             <div class="span12">
                 <div class="cform" id="contact-form">
                     <div id="sendmessage">
-                        Your message has been sent. Thank you!
+                        您的请求已提交,非常感谢!
                     </div>
-                    <form action="/postSubject" method="post" class="contactForm">
+                    <form  method="post" class="contactForm" target="_blank" id="form_suggestions">
                         <div class="row">
                             <div class="span6">
                                 <div class="field your-name">
-                                    <input type="text" name="name" placeholder="Your Name" class="cform-text"
+                                    <input type="text" name="name" placeholder="名字" class="cform-text" id="name"
                                            size="40" data-rule="maxlen:4" data-msg="Please enter at least 4 chars"/>
                                     <div class="validation">
                                     </div>
                                 </div>
                                 <div class="field your-email">
-                                    <input type="text" name="email" placeholder="Your Email" class="cform-text"
+                                    <input type="text" name="email" placeholder="邮箱" class="cform-text" id="email"
                                            size="40" data-rule="email" data-msg="Please enter a valid email"/>
                                     <div class="validation">
                                     </div>
                                 </div>
                                 <div class="field subject">
-                                    <input type="text" name="subject" placeholder="Subject" class="cform-text" size="40"
+                                    <input type="text" name="subject" placeholder="主题/目的" class="cform-text" size="40" id="subject"
                                            data-rule="maxlen:4" data-msg="Please enter at least 8 chars of subject"/>
                                     <div class="validation">
                                     </div>
@@ -351,12 +349,13 @@
                             </div>
                             <div class="span6">
                                 <div class="field message">
-                                    <textarea placeholder="content" name="message" class="cform-textarea" cols="40" rows="10"
+                                    <textarea placeholder="content" name="内容" class="cform-textarea" cols="40" id="content"
+                                              rows="10"
                                               data-rule="required" data-msg="Please write something for us"></textarea>
                                     <div class="validation">
                                     </div>
                                 </div>
-                                <input type="submit" value="Send message" class="btn btn-theme pull-left">
+                                <input type="submit" value="Send message" class="btn btn-theme pull-left" id="submit"/>
                             </div>
                         </div>
                     </form>
@@ -372,7 +371,7 @@
     <div class="container">
         <div class="row">
             <div class="span6 offset3">
-                <ul class="social-networks">
+                <ul class="social-networks hidden">
                     <li><a href="#"><i class="icon-circled icon-bgdark icon-instagram icon-2x"></i></a></li>
                     <li><a href="#"><i class="icon-circled icon-bgdark icon-twitter icon-2x"></i></a></li>
                     <li><a href="#"><i class="icon-circled icon-bgdark icon-dribbble icon-2x"></i></a></li>
